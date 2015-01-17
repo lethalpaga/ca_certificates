@@ -2,7 +2,8 @@ ca_certificates Cookbook
 ========================
 
 This cookbook provides the ability to manage the system-level trusted certificate authorities. 
-The primary use case would be to add your on internal corporate certificate authority as trusted.
+The primary use case would be to add your own internal corporate certificate authority root certificate as trusted
+on nodes managed by chef.
 
 If you run your own Certificate Authority (CA), you will need to install your certificate on each of the
 machines you would like to use certificates from that CA. Debian and Red Hat both provide different ways of
@@ -10,6 +11,21 @@ adding trusted Certificate Authority Root Certificates to their systems. The goa
 abstract that in a way that is easy to manage with chef.
 
 For more detailed information see Red Hat's `update-ca-trust` and Debian's `update-ca-certificates`.
+
+Note:
+
+This coobook does not install or manage intermediate chains and leaf certificates. I recommend
+looking at the [certificate](https://supermarket.chef.io/cookbooks/certificate) cookbook for that.
+
+This cookbook does not manage a Certificate Authority (CA) for you.
+The following projects maybe worth pursuing:
+ * [x509](https://supermarket.chef.io/cookbooks/x509)
+ * [Dogtag](http://pki.fedoraproject.org/wiki/PKI_Main_Page)
+ * [EJBCA](http://www.ejbca.org/)
+ * [OpenCA](https://github.com/openca)
+ * [r509](http://r509.org/)
+ * [XCA](http://xca.sourceforge.net/)
+ * [OpenSSL](https://www.openssl.org/)
 
 ## Platforms:
 
