@@ -47,6 +47,9 @@ action :add do
       mode '0600'
       action :create
     end
+    execute 'update-ca-trust enable' do
+      action :run
+    end
     execute 'update-ca-trust extract' do
       action :run
     end
