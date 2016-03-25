@@ -1,0 +1,11 @@
+DEPENDENCIES
+  apt (~> 3.0.0)
+  ca_certificates
+    path: .
+    metadata: true
+  yum (~> 3.10.0)
+
+GRAPH
+  apt (3.0.0)
+  ca_certificates (0.1.0)
+  yum (3.10.0)
