@@ -54,8 +54,8 @@ end
 
 action :remove do
   if platform_family?('debian')
-   # If you remove local certificates from /usr/local/share/ca-certificates/, you can remove symlinks by running
-   # 'update-ca-certificates --fresh'.
+    # If you remove local certificates from /usr/local/share/ca-certificates/, you can remove symlinks by running
+    # 'update-ca-certificates --fresh'.
   end
   if platform_family?('rhel')
   end
