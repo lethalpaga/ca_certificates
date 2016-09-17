@@ -11,23 +11,45 @@ end
 action :add do
   if platform_family?('debian')
     # see /usr/share/doc/ca-certificates/README.Debian
-    # 1) copy ca in PEM format (extension .crt) to /usr/local/share/ca-certificates/local/
-    cookbook_file "#{node['ca_certificates']['path']}/#{node['ca_certificates']['caname']}.crt" do
-      source "certs/#{node['ca_certificates']['caname']}.crt"
+    # 1) copy ca in PEM format (extension .crt) to /usr/local/share/ca-certificates/
+    #
+    directory "#{node['ca_certificates']['path']}/local" do
       owner 'root'
       group 'root'
-      mode '0600'
+      mode '0700'
       action :create
     end
+
+    if new_resource.file
+      cookbook_file "#{node['ca_certificates']['path']}/#{node['ca_certificates']['caname']}.crt" do
+        source "certs/#{node['ca_certificates']['caname']}.crt"
+        owner 'root'
+        group 'root'
+        mode '0600'
+        action :create
+      end
+    elsif new_resource.content
+      file "#{node['ca_certificates']['path']}/local/#{new_resource.cert_name}.crt" do
+        content new_resource.content
+        owner 'root'
+        group 'root'
+        mode '0600'
+        action :create
+      end
+    else
+      fail 'Please specify either file or content'
+    end
+
     # 2) edit /etc/ca-certificates.conf
-    ruby_block "add #{node['ca_certificates']['caname']} to /etc/ca-certificates.conf" do
+    ruby_block "add #{new_resource.cert_name} to /etc/ca-certificates.conf" do
       block do
         fe = Chef::Util::FileEdit.new('/etc/ca-certificates.conf')
-        fe.insert_line_if_no_match(/^local\/#{node['ca_certificates']['caname']}.crt$/, "local/#{node['ca_certificates']['caname']}.crt")
+        fe.insert_line_if_no_match(/^local\/#{new_resource.cert_name}.crt$/, "local/#{new_resource.cert_name}.crt")
         fe.write_file
       end
-      not_if "grep #{node['ca_certificates']['caname']} /etc/ca-certificates.conf"
+      not_if "grep #{new_resource.cert_name} /etc/ca-certificates.conf"
     end
+
     # 3) run update-ca-certificates
     execute 'update-ca-certificates' do
       action :run
