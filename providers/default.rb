@@ -4,7 +4,8 @@ def whyrun_supported?
 end
 
 def load_current_resource
-  new_resource.key new_resource.name unless new_resource.key
+  # This looks half-baked and is not used below anyway
+  # new_resource.key new_resource.name unless new_resource.key
 end
 
 action :add do
@@ -45,6 +46,9 @@ action :add do
       group 'root'
       mode '0600'
       action :create
+    end
+    execute 'update-ca-trust enable' do
+      action :run
     end
     execute 'update-ca-trust extract' do
       action :run
